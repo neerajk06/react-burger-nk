@@ -22,6 +22,7 @@ class BurgerBuilder extends Component {
   };
 
   addIngredientHandler = (type) => {
+      console.log("add Ingredient func;")
     const oldCount = this.state.ingredients[type];
     // eslint-disable-next-line
     const updatedCount = oldCount + 1;
@@ -36,13 +37,31 @@ class BurgerBuilder extends Component {
 
   };
 
-  removeIngredientHandler = () => {};
+  removeIngredientHandler = (type) => {
+    const oldCount = this.state.ingredients[type];
+    if(oldCount <=0)
+    {
+        return;
+    }
+    // eslint-disable-next-line
+    const updatedCount = oldCount - 1;
+    const updatedIngredients = {
+      ...this.state.ingredients
+    };
+    updatedIngredients[type] = updatedCount;
+    const priceDeduction = INGREDIENT_PRICES[type];
+    const oldPrice = this.state.totalPrice;
+    const newPrice = oldPrice - priceDeduction;
+    this.setState({totalPrice: newPrice, ingredients: updatedIngredients});
+
+  };
 
   render() {
     return (
       <Auxe>
         <Burger ingredients={this.state.ingredients}></Burger>
-        <BuildControls ingredientAdded ={this.addIngredientHandler} />
+        <BuildControls ingredientAdded ={this.addIngredientHandler}
+        ingredientRemoved ={this.removeIngredientHandler} />
       </Auxe>
     );
   }
